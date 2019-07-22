@@ -2,6 +2,8 @@ package com.shiro.xiaoer.domain;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * 权限
  *
@@ -10,7 +12,7 @@ import lombok.Data;
  * @Date : 2019/7/16
  */
 @Data
-public class Permission {
+public class Permission implements Serializable {
 
     private Integer id;
 
