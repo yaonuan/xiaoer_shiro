@@ -1,18 +1,17 @@
 package com.shiro.xiaoer;
 
+import com.shiro.XiaoerApplication;
 import com.shiro.xiaoer.domain.Role;
 import com.shiro.xiaoer.domain.User;
 import com.shiro.xiaoer.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.omg.CORBA.PUBLIC_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @Author : yaonuan
