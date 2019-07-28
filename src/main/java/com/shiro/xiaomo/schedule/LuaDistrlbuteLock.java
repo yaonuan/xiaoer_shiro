@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scripting.support.ResourceScriptSource;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ import java.util.Enumeration;
 import java.util.List;
 
 /**
- * lua脚本实现
+ * lua脚本实现(设置时间的时候会出现未成功的问题,即setex未成功)
  *
  * @Author : yaonuan
  * @Email : 806039077@qq.com
@@ -42,13 +43,13 @@ public class LuaDistrlbuteLock {
 
     private DefaultRedisScript<Boolean> lockScript;
 
-//    @Scheduled(cron = "0/5 * * * * *")
-    public void lockJob(){
+    //    @Scheduled(cron = "0/5 * * * * *")
+    public void lockJob() {
         String lock = LOCK_PREFIX + "LockNxExJob";
 
         boolean luaRet = false;
         try {
-            luaRet = luaExpress(lock,getHostIp());
+            luaRet = luaExpress(lock, getHostIp());
 
             //获取锁失败
             if (!luaRet) {
@@ -74,11 +75,12 @@ public class LuaDistrlbuteLock {
 
     /**
      * 获取lua结果
+     *
      * @param key
      * @param value
      * @return
      */
-    public Boolean luaExpress(String key,String value) {
+    public Boolean luaExpress(String key, String value) {
         lockScript = new DefaultRedisScript<Boolean>();
         lockScript.setScriptSource(
                 new ResourceScriptSource(new ClassPathResource("add.lua")));
