@@ -4,13 +4,16 @@ import com.shiro.xiaomo.service.RedisService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisStringCommands;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.data.redis.core.types.Expiration;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scripting.support.ResourceScriptSource;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
@@ -34,8 +37,11 @@ public class JedisDistributedLock {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
+
     @Autowired
     private RedisService redisService;
+
+    private DefaultRedisScript<Boolean> lockScript;
 
     public static final String UNLOCK_LUA;
 
@@ -51,7 +57,7 @@ public class JedisDistributedLock {
     }
 
 
-    @Scheduled(cron = "0/10 * * * * *")
+//    @Scheduled(cron = "0/10 * * * * *")
     public void lockJob() {
 
         String lock = LOCK_PREFIX + "JedisNxExJob";
@@ -88,7 +94,7 @@ public class JedisDistributedLock {
             Boolean result = redisTemplate.execute(new RedisCallback<Boolean>() {
                 @Override
                 public Boolean doInRedis(RedisConnection connection) throws DataAccessException {
-                    return connection.set(key.getBytes(), "锁定的资源".getBytes(), Expiration.seconds(expire) ,RedisStringCommands.SetOption.ifAbsent());
+                    return connection.set(key.getBytes(), "锁定的资源".getBytes(), Expiration.seconds(expire), RedisStringCommands.SetOption.ifAbsent());
                 }
             });
             return result;
