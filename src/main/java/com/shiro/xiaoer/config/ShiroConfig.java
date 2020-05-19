@@ -55,6 +55,7 @@ public class ShiroConfig {
         // 退出过滤器
         filterChainDefinitionMap.put("/logout", "logout");
 
+        filterChainDefinitionMap.put("/red_packet/**", "anon");
         // 匿名可以访问，即游客模式
         filterChainDefinitionMap.put("/pub/**", "anon");
         // 登录才可以访问
